@@ -1,0 +1,77 @@
+#include <iostream>
+#include <fstream> // Include the fstream library for file operations
+
+struct Node {
+    int data;
+    Node* next;
+
+    Node(int value) : data(value), next(nullptr) {}
+};
+
+class Queue {
+private:
+    Node* front;
+    Node* rear;
+
+public:
+    Queue() : front(nullptr), rear(nullptr) {}
+
+    bool isEmpty() {
+        return front == nullptr;
+    }
+
+    void enqueue(int value) {
+        Node* newNode = new Node(value);
+        if (isEmpty()) {
+            front = rear = newNode;
+        } else {
+            rear->next = newNode;
+            rear = newNode;
+        }
+    }
+
+    void dequeue() {
+        if (isEmpty()) {
+            std::cout << "Queue is empty. Cannot dequeue." << std::endl;
+            return;
+        }
+        Node* temp = front;
+        front = front->next;
+        delete temp;
+    }
+
+    int getFront() {
+        if (isEmpty()) {
+            std::cout << "Queue is empty." << std::endl;
+            return -1;
+        }
+        return front->data;
+    }
+};
+
+int main() {
+    Queue queue;
+
+    queue.enqueue(1);
+    queue.enqueue(2);
+    queue.enqueue(3);
+
+    std::cout << "Front of the queue: " << queue.getFront() << std::endl;
+
+    queue.dequeue();
+
+    std::cout << "Front of the queue after dequeue: " << queue.getFront() << std::endl;
+
+    // Create a file and write data to it
+    std::ofstream outputFile("output.txt");
+    if (outputFile.is_open()) {
+        outputFile << "Front of the queue: " << queue.getFront() << std::endl;
+        outputFile << "Front of the queue after dequeue: " << queue.getFront() << std::endl;
+        outputFile.close();
+        std::cout << "Data has been written to 'output.txt'." << std::endl;
+    } else {
+        std::cout << "Unable to open 'output.txt' for writing." << std::endl;
+    }
+
+    return 0;
+}
